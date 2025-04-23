@@ -21,32 +21,6 @@ Une application web responsive pour générer et gérer des emplois du temps de 
 - **HTML5** - Pour la structure et les fonctionnalités d'impression
 - **CSS3** - Pour le style et les animations
 
-## Installation
-
-1. Clonez le dépôt:
-
-   ```bash
-   git clone https://github.com/mzilinassim/formation-planning-generator.git
-   ```
-
-2. Accédez au répertoire du projet:
-
-   ```bash
-   cd formation-planning-generator
-   ```
-
-3. Installez les dépendances:
-
-   ```bash
-   npm install
-   ```
-
-4. Lancez le serveur de développement:
-
-   ```bash
-   npm start
-   ```
-
 ## Utilisation
 
 1. Définir les Paramètres de Base:

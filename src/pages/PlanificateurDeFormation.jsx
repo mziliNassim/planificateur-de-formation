@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import Hero from "../components/Hero.jsx";
 import ParametersCard from "../components/ParametersCard.jsx";
-import PlanningCard from "../components/PlanningCard.jsx";
-import Features from "../components/Features.jsx";
-import Footer from "../components/Footer";
 
 const PlanificateurDeFormation = () => {
   return (
@@ -14,12 +11,7 @@ const PlanificateurDeFormation = () => {
 
         {/* Parameters card */}
         <ParametersCard />
-
-        {/* Features section */}
-        {/* <Features /> */}
       </main>
-
-      {/* <Footer /> */}
     </div>
   );
 };
