@@ -232,11 +232,11 @@ const ParametersCard = () => {
                     }
                     className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4a277a] transition-all bg-white"
                   >
-                    <option value="">Sélectionner un jour</option>
+                    {/* <option value="">Sélectionner un jour</option> */}
                     {Object.entries(availableDays)
                       .filter(([_, isAvailable]) => isAvailable)
                       .map(([day], i) => (
-                        <option key={day} value={day} defaultValue="lundi">
+                        <option key={day} value={day} selected={day == "lundi"}>
                           {day.charAt(0).toUpperCase() + day.slice(1)}
                         </option>
                       ))}

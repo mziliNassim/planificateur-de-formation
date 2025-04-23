@@ -1,5 +1,7 @@
 # Générateur de Planning de Formation
 
+Website Preview [ici](https://planificateur-de-formation.netlify.app/)
+
 Une application web responsive pour générer et gérer des emplois du temps de formation avec des modules personnalisables, des jours et des créneaux horaires.
 
 ## Fonctionnalités
