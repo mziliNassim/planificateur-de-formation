@@ -23,3 +23,10 @@
   text-align: center;
   margin-inline: auto;
 }
+
+/* ========== */
+.certificate {
+  /* background-image: url("./assets/bg_certificate.png"); */
+  /* background-repeat: no-repeat; */
+  /* object-fit: con; */
+}

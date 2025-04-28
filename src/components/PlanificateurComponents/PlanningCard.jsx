@@ -1,5 +1,6 @@
 import React from "react";
 import { Printer, Calendar } from "lucide-react";
+import logo from "../../assets/logo_.png";
 
 // Fonction pour calculer la durée entre deux heures
 const calculateDuration = (startTime, endTime) => {
@@ -76,96 +77,180 @@ const PlanningCard = ({ planning = [], onTimeUpdate }) => {
       return;
     }
 
-    // Get only the table content
-    const printContent = tableToPrint.innerHTML;
+    // Create a new window for printing
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      alert("Please allow pop-ups to generate the PDF planning");
+      return;
+    }
 
-    // Replace the page with only the table content
-    document.body.innerHTML = `
-      <div style="padding: 20px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;">
+    // Get the original styles from the page
+    const styles = Array.from(document.styleSheets)
+      .map((styleSheet) => {
+        try {
+          return Array.from(styleSheet.cssRules)
+            .map((rule) => rule.cssText)
+            .join("\n");
+        } catch (e) {
+          console.log("Error accessing stylesheet rules", e);
+          return "";
+        }
+      })
+      .join("\n");
+
+    // Clone the table content but disable inputs
+    const tableHTML = tableToPrint.innerHTML;
+    const processedHTML = tableHTML.replace(
+      /<input[^>]*value="([^"]*)"[^>]*>/g,
+      '<span class="time-value">$1</span>'
+    );
+
+    // Get the formation title if available
+    let formationTitle = "Planning de Formation";
+    const titleElement = document.querySelector("h1");
+    if (titleElement) {
+      formationTitle = titleElement.textContent;
+    }
+
+    // Get current date for the report
+    const today = new Date().toLocaleDateString("fr-FR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
+    printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>${formationTitle}</title>
         <style>
+          ${styles}
+          @page {
+            size: landscape;
+            margin: 15mm;
+          }
+          html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+          }
+          body {
+            background-color: white;
+          }
+          .planning-container {
+            padding: 20px;
+            max-width: 100%;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            page-break-inside: auto;
+          }
+          thead {
+            display: table-header-group;
+          }
+          tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+          }
+          th {
+            background-color: #4a277a !important;
+            color: white !important;
+            padding: 10px;
+            text-align: left;
+            font-weight: bold;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+          }
+          td {
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+          }
+          .time-value {
+            font-family: monospace;
+            font-size: 0.9rem;
+          }
+          .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            align-items: center;
+          }
+          .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a277a;
+            text-transform: capitalize;
+          }
+          .date {
+            font-size: 14px;
+            color: #666;
+          }
+          .logo {
+            height: 50px;
+            margin-bottom: 10px;
+          }
+          .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            page-break-inside: avoid;
+          }
           @media print {
-            body { margin: 0; padding: 0; }
-            table { width: 100%; border-collapse: collapse; }
+            body {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .bg-\[\#4a277a\] {
+              background-color: #4a277a !important;
+              color: white !important;
+            }
             th {
               background-color: #4a277a !important;
               color: white !important;
-              print-color-adjust: exact;
-              -webkit-print-color-adjust: exact;
             }
-            tr, td, th { page-break-inside: avoid; }
-            input { border: none; }
-            @page {
-              size: landscape;
-              margin: 10mm;
+            .no-print {
+              display: none !important;
             }
-          }
-
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
           }
         </style>
-
-        <div style="
-          background: white;
-          border-radius: 16px;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-          padding: 24px;
-          margin-bottom: 24px;
-          position: relative;
-          z-index: 10;
-          border-top: 4px solid #4a277a;
-          animation: fadeIn 0.4s ease-out;
-        ">
-          <div style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-          ">
-            <div style="display: flex; align-items: center;">
-              <div style="
-                background: #4a277a;
-                padding: 12px;
-                border-radius: 8px;
-                color: white;
-                margin-right: 16px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              ">
-                <!-- Calendar icon would go here -->
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M15.6947 13.7H15.7037M15.6947 16.7H15.7037M11.9955 13.7H12.0045M11.9955 16.7H12.0045M8.29431 13.7H8.30329M8.29431 16.7H8.30329" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
-              <h2 style="
-                font-size: 1.5rem;
-                font-weight: 700;
-                color: #1a1a1a;
-                margin: 0;
-              ">Planning</h2>
-            </div>
+      </head>
+      <body>
+        <div class="planning-container">
+          <div class="header">
+              <img src=${logo} alt="logo" />
+              <div class="date">le ${today}</div>
           </div>
 
-          <div style="
-            background: #f9fafb;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-          ">
-            ${printContent}
-          </div>
+          <table>
+            ${processedHTML}
+          </table>
+
         </div>
-      </div>
-    `;
 
-    // Print the document
-    window.print();
+        <div class="no-print" style="position: fixed; top: 20px; right: 20px;">
+          <button onclick="window.print(); setTimeout(() => window.close(), 500);"
+                  style="padding: 10px 20px; background-color: #4a277a; color: white;
+                  border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+            Imprimer / Enregistrer en PDF
+          </button>
+        </div>
 
-    // Restore the original content
-    window.location = "/";
+        <script>
+          window.onload = () => {
+            window.print();
+            setTimeout(() => window.close(), 100);
+          };
+        </script>
+      </body>
+    </html>
+  `);
+
+    // Finish loading the document
+    printWindow.document.close();
+    printWindow.focus();
   };
 
   return (

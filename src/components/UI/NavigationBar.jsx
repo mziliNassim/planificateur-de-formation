@@ -22,6 +22,11 @@ const NavigationBar = () => {
               planificateur de Formation
             </Link>
           </li>
+          <li>
+            <Link to="/generateur-de-certificats">
+              Générateur de Certificats
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>
