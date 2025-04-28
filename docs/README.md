@@ -1,6 +1,6 @@
 # Formation WEB4JOBS
 
-Website Preview [ici](https://planificateur-de-formation.netlify.app/)
+Website Preview [ici](https://web4jobs-formation.netlify.app/)
 
 ## Générateur de Planning de Formation
 
