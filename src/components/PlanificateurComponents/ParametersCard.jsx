@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 const ParametersCard = () => {
-  const [moduleCount, setModuleCount] = useState(1);
+  const [moduleCount, setModuleCount] = useState(0);
   const [availableDays, setAvailableDays] = useState({
     lundi: true,
     mardi: true,
@@ -188,7 +188,11 @@ const ParametersCard = () => {
               min="1"
               value={moduleCount}
               onChange={(e) =>
-                setModuleCount(Math.max(1, parseInt(e.target.value) || 1))
+                setModuleCount(
+                  e.target.value < 0
+                    ? Math.max(0, parseInt(e.target.value))
+                    : Math.min(10, parseInt(e.target.value))
+                )
               }
               className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4a277a] transition-all text-lg"
             />
@@ -200,53 +204,59 @@ const ParametersCard = () => {
       </div>
 
       {/* Module Themes and Days */}
-      <div className="mb-6">
-        <label className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-          <Edit className="w-4 h-4 mr-2 text-[#4a277a]" />
-          Thèmes et jours des modules
-        </label>
-        <div className="space-y-4">
-          {Array.from({ length: moduleCount }).map((_, index) => (
-            <div key={index} className="bg-purple-50 p-4 rounded-xl">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 block">
-                    Module {index + 1}
-                  </label>
-                  <input
-                    type="text"
-                    value={moduleThemes[index] || ""}
-                    onChange={(e) => handleThemeChange(index, e.target.value)}
-                    placeholder={`Thème du module ${index + 1}`}
-                    className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4a277a] transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 block">
-                    Jour
-                  </label>
-                  <select
-                    value={moduleDays[`module${index + 1}`] || ""}
-                    onChange={(e) =>
-                      handleModuleDayChange(index + 1, e.target.value)
-                    }
-                    className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4a277a] transition-all bg-white"
-                  >
-                    {/* <option value="">Sélectionner un jour</option> */}
-                    {Object.entries(availableDays)
-                      .filter(([_, isAvailable]) => isAvailable)
-                      .map(([day], i) => (
-                        <option key={day} value={day} selected={day == "lundi"}>
-                          {day.charAt(0).toUpperCase() + day.slice(1)}
-                        </option>
-                      ))}
-                  </select>
+      {moduleCount > 0 && (
+        <div className="mb-6">
+          <label className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+            <Edit className="w-4 h-4 mr-2 text-[#4a277a]" />
+            Thèmes et jours des modules
+          </label>
+          <div className="space-y-4 max-h-[60vh] overflow-y-auto rounded-md">
+            {Array.from({ length: moduleCount }).map((_, index) => (
+              <div key={index} className="bg-purple-50 p-4 rounded-xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                      Module {index + 1}
+                    </label>
+                    <input
+                      type="text"
+                      value={moduleThemes[index] || ""}
+                      onChange={(e) => handleThemeChange(index, e.target.value)}
+                      placeholder={`Thème du module ${index + 1}`}
+                      className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4a277a] transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                      Jour
+                    </label>
+                    <select
+                      value={moduleDays[`module${index + 1}`] || ""}
+                      onChange={(e) =>
+                        handleModuleDayChange(index + 1, e.target.value)
+                      }
+                      className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4a277a] transition-all bg-white"
+                    >
+                      {/* <option value="">Sélectionner un jour</option> */}
+                      {Object.entries(availableDays)
+                        .filter(([_, isAvailable]) => isAvailable)
+                        .map(([day], i) => (
+                          <option
+                            key={day}
+                            value={day}
+                            selected={day == "lundi"}
+                          >
+                            {day.charAt(0).toUpperCase() + day.slice(1)}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Jours */}
       <div className="mb-6">
