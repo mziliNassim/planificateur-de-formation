@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import Hero from "../components/UI/Hero";
+import PopupAlert from "../components/UI/PopupAlert.jsx";
 
 import FormCard from "../components/GenerateurComponents/FormCard.jsx";
 import CertificatePreview from "../components/GenerateurComponents/CertificatePreview.jsx";
@@ -10,6 +11,7 @@ import { Loader } from "lucide-react";
 
 const GenerateurDeCertificats = () => {
   const [loading, setLoading] = useState(true);
+  const [alert, setAlert] = useState({ message: "", success: false });
   const [formations, setFormations] = useState([]);
   const [formationsUpade, setFormationsUpade] = useState(false);
   const [formData, setFormData] = useState({
@@ -46,9 +48,27 @@ const GenerateurDeCertificats = () => {
   };
 
   const generatePDF = () => {
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.obtentionDate ||
+      !formData.formationTitle ||
+      !formData.qrCodeLink
+    ) {
+      setAlert({
+        message:
+          "Please complete all required fields before generating the certificate.",
+        success: false,
+      });
+      return;
+    }
+
     const certificateToPrint = document.querySelector(".printed-part");
     if (!certificateToPrint) {
-      console.error("Could not find certificate to print");
+      setAlert({
+        message: "Could not find certificate to print",
+        success: false,
+      });
       return;
     }
 
@@ -163,16 +183,6 @@ const GenerateurDeCertificats = () => {
     printWindow.focus();
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
-
   return (
     <div>
       {formationsUpade && (
@@ -181,6 +191,8 @@ const GenerateurDeCertificats = () => {
           setFormations={setFormations}
         />
       )}
+
+      {alert?.message && <PopupAlert alert={alert} setAlert={setAlert} />}
 
       <main className="container mx-auto p-4 flex-grow z-10 relative w-full xl:w-10/12 max-w-7xl">
         <Hero title="générateur de certificats" />

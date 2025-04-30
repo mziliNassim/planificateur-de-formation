@@ -1,5 +1,6 @@
-@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Exo+2:wght@100..900&display=swap");
 
+@import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
 .header-new-about {
@@ -23,10 +24,7 @@
   text-align: center;
   margin-inline: auto;
 }
-
-/* ========== */
-.certificate {
-  /* background-image: url("./assets/bg_certificate.png"); */
-  /* background-repeat: no-repeat; */
-  /* object-fit: con; */
+.font-exo {
+  font-family: "Exo 2", sans-serif;
+  font-optical-sizing: auto;
 }

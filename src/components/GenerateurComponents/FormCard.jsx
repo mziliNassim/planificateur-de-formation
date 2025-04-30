@@ -69,8 +69,8 @@ const FormCard = ({
                 className="w-full cursor-pointer px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4a277a] transition-all"
                 onChange={handleInputChange}
               >
-                <option className="cursor-pointer" defaultValue disabled>
-                  select Titre de la formation
+                <option className="cursor-pointer" disabled value="">
+                  Select titre de la formation
                 </option>
                 {formations &&
                   formations.map((formation, i) => (
