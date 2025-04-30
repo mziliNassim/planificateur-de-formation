@@ -75,7 +75,7 @@ const CertificatePreview = ({ formData }) => {
               </div>
 
               {/* QR Code */}
-              <div className="absolute bottom-24 md:bottom-28 lg:bottom-32">
+              <div className="absolute bottom-24 md:bottom-28 lg:bottom-38">
                 <div className="flex items-center justify-center">
                   <QRCodeSVG
                     value={formData.qrCodeLink || "https://w4j.yool.education/"}

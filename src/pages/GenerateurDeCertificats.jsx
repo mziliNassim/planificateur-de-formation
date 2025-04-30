@@ -48,16 +48,37 @@ const GenerateurDeCertificats = () => {
   };
 
   const generatePDF = () => {
-    if (
-      !formData.firstName ||
-      !formData.lastName ||
-      !formData.obtentionDate ||
-      !formData.formationTitle ||
-      !formData.qrCodeLink
-    ) {
+    if (!formData.firstName) {
       setAlert({
-        message:
-          "Please complete all required fields before generating the certificate.",
+        message: "Please enter the recipient's first name.",
+        success: false,
+      });
+      return;
+    }
+    if (!formData.lastName) {
+      setAlert({
+        message: "Please enter the recipient's last name.",
+        success: false,
+      });
+      return;
+    }
+    if (!formData.obtentionDate) {
+      setAlert({
+        message: "Please select the certificate obtention date.",
+        success: false,
+      });
+      return;
+    }
+    if (!formData.formationTitle) {
+      setAlert({
+        message: "Please select a formation title.",
+        success: false,
+      });
+      return;
+    }
+    if (!formData.qrCodeLink) {
+      setAlert({
+        message: "Please provide a valid QR code link.",
         success: false,
       });
       return;
@@ -66,7 +87,7 @@ const GenerateurDeCertificats = () => {
     const certificateToPrint = document.querySelector(".printed-part");
     if (!certificateToPrint) {
       setAlert({
-        message: "Could not find certificate to print",
+        message: "Certificate content could not be found for printing.",
         success: false,
       });
       return;
@@ -75,7 +96,11 @@ const GenerateurDeCertificats = () => {
     // Create a new window for printing
     const printWindow = window.open("", "_blank");
     if (!printWindow) {
-      alert("Please allow pop-ups to generate the PDF certificate");
+      setAlert({
+        message:
+          "Please enable pop-ups in your browser to generate the certificate.",
+        success: false,
+      });
       return;
     }
 
@@ -221,5 +246,3 @@ const GenerateurDeCertificats = () => {
 };
 
 export default GenerateurDeCertificats;
-
-<></>;
